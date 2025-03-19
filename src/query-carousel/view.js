@@ -18,11 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		slideContainer.classList.add('glide__slides');
 		track.appendChild(slideContainer);
 
-		//loop through the children of content and add them to the slideContainer
-		content.childNodes.forEach(slideContent => {
-			if (slideContent.nodeType !== Node.ELEMENT_NODE) {
-				return;
-			}
+		Array.from(content.childNodes).forEach(slideContent => {
 			const slideItem = document.createElement('li');
 			slideItem.classList.add('glide__slide');
 			slideItem.appendChild(slideContent);
@@ -30,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 
 		content.replaceWith(track);
-
 
 		// if there is a wp-block-buttons we'll use that as the controls
 		const controls = glideInstance.querySelector('.wp-block-buttons');
