@@ -54,36 +54,24 @@ add_action('wp_enqueue_scripts', function () {
 
 });
 
-
 // when the query block renders, check to see if it is a carousel variation
-// and if so, add the necessary classes to the wrapper
+// and if so, add the necessary classes to the wrapper to customize functionality
 add_filter('render_block', function ($block_content, $block) {
 
-	if ( 'core/query' !== $block['blockName'] ) {
+	if ( 'core/query' !== $block['blockName'] || empty($block['attrs']['namespace']) || $block['attrs']['namespace'] !== 'carousel-query-loop' ) {
 		return $block_content;
 	}
 
-	if( isset($block['attrs']['namespace']) && $block['attrs']['namespace'] === 'carousel-query-loop') {
+	$classes = array_filter([
+		$block['attrs']['query']['isAutoPlay'] ?? false ? 'carousel-auto' : null,
+		$block['attrs']['query']['isTwoUp'] ?? false ? 'carousel-two-up' : null,
+		$block['attrs']['query']['isPeek'] ?? false ? 'carousel-peek' : null,
+	]);
 
-		$autoplay = $block['attrs']['query']['isAutoPlay'] ?? false;
-		$two_up = $block['attrs']['query']['isTwoUp'] ?? false;
-		$peek = $block['attrs']['query']['isPeek'] ?? false;
-
+	if ( ! empty($classes) ) {
 		$processor = new WP_HTML_Tag_Processor( $block_content );
 		$processor->next_tag();
-
-		if($autoplay) {
-			$processor->add_class( 'carousel-auto' );
-		}
-
-		if($two_up) {
-			$processor->add_class( 'carousel-two-up' );
-		}
-
-		if($peek) {
-			$processor->add_class( 'carousel-peek' );
-		}
-
+		$processor->add_class( implode( ' ', $classes ) );
 		return $processor->get_updated_html();
 	}
 
