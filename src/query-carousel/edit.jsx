@@ -12,6 +12,7 @@ registerBlockVariation("core/query", {
 	attributes: {
 		namespace: "carousel-query-loop",
 		className: "is-carousel-query",
+		isAutoPlay: true,
 	},
 	innerBlocks: [["core/post-template", {}, [["core/post-title", {}]]]],
 	scope: ["inserter"],
@@ -20,12 +21,11 @@ registerBlockVariation("core/query", {
 
 const withQueryCarouselControls = (BlockEdit) => (props) => {
 
-	if ( ! props?.attributes?.namespace === 'carousel-query-loop' ) {
+	const { attributes, setAttributes } = props;
+
+	if ( ! attributes?.namespace === 'carousel-query-loop' ) {
 		return <BlockEdit {...props} />
 	}
-
-	const query = props?.attributes?.query || {};
-	const setAttributes = props.setAttributes;
 
 	return <>
 		<BlockEdit {...props} />
@@ -34,25 +34,25 @@ const withQueryCarouselControls = (BlockEdit) => (props) => {
 			<CheckboxControl
 				label="Show Two"
 				__nextHasNoMarginBottom
-				checked={query.isTwoUp || false}
+				checked={attributes?.isTwoUp || false}
 				onChange={(value) => {
-					setAttributes({ query:{ ...query, isTwoUp: value }});
+					setAttributes({ isTwoUp: value });
 				}}
 			/>
 			<CheckboxControl
 				label="Peek"
 				__nextHasNoMarginBottom
-				checked={query.isPeek || false}
+				checked={attributes?.isPeek || false}
 				onChange={(value) => {
-					setAttributes({ query:{ ...query, isPeek: value }});
+					setAttributes({ isPeek: value });
 				}}
 			/>
 			<CheckboxControl
 				label="Auto Play"
 				__nextHasNoMarginBottom
-				checked={query.isAutoPlay || false}
+				checked={attributes?.isAutoPlay || false}
 				onChange={(value) => {
-					setAttributes({ query:{ ...query, isAutoPlay: value }});
+					setAttributes({ isAutoPlay: value });
 				}}
 			/>
 		</PanelBody>

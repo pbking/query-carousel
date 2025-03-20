@@ -23,11 +23,17 @@ add_action('enqueue_block_editor_assets', function () {
 	);
 });
 
-// optionally include the view script but only if the block is present
+
+/**
+ *
+ * Enqueue the query carousel block assets if the query block is present.
+ *
+ * TODO: Only enqueue if the block variation is present
+ *
+ */
 add_action('wp_enqueue_scripts', function () {
 
-	// TODO: Only enqueue if the block variation is present
-	if ( ! has_block('query') ) {
+	if ( ! has_block('core/query') ) {
 		return;
 	}
 
@@ -54,8 +60,12 @@ add_action('wp_enqueue_scripts', function () {
 
 });
 
-// when the query block renders, check to see if it is a carousel variation
-// and if so, add the necessary classes to the wrapper to customize functionality
+
+/**
+ *
+ * Add custom classes to the Query block carousel varation based on the custom attributes.
+ *
+ */
 add_filter('render_block', function ($block_content, $block) {
 
 	if ( 'core/query' !== $block['blockName'] || empty($block['attrs']['namespace']) || $block['attrs']['namespace'] !== 'carousel-query-loop' ) {
@@ -78,3 +88,35 @@ add_filter('render_block', function ($block_content, $block) {
 	return $block_content;
 
 }, 10, 2);
+
+/**
+ *
+ * Add custom attributes to the Query block.
+ *
+ */
+add_filter( 'block_type_metadata', function( $metadata ) {
+
+	if ( isset( $metadata['name'] ) && $metadata['name'] === 'core/query' ) {
+
+		$metadata['attributes'] = array_merge(
+			$metadata['attributes'] ?? [],
+			[
+				'isAutoPlay' => [
+					'type'    => 'boolean',
+					'default' => false,
+				],
+				'isTwoUp' => [
+					'type'    => 'boolean',
+					'default' => false,
+				],
+				'isPeek' => [
+					'type'    => 'boolean',
+					'default' => false,
+				],
+			]
+		);
+
+	}
+
+	return $metadata;
+}, 10 );
