@@ -23,7 +23,8 @@ const withQueryCarouselControls = (BlockEdit) => (props) => {
 
 	const { attributes, setAttributes } = props;
 
-	if ( ! attributes?.namespace === 'carousel-query-loop' ) {
+
+	if ( attributes?.namespace !== 'carousel-query-loop' ) {
 		return <BlockEdit {...props} />
 	}
 
