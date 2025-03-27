@@ -160,4 +160,4 @@ add_action( 'init', function() {
 			return $args;
 		}, 10, 2 );
 	}
-});
+}, 12);
