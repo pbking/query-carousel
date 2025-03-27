@@ -120,3 +120,44 @@ add_filter( 'block_type_metadata', function( $metadata ) {
 
 	return $metadata;
 }, 10 );
+
+
+/**
+ *
+ * Modify the query for the Query block to use the selected posts from the Query Carousel block.
+ *
+ * @see https://developer.wordpress.org/reference/hooks/query_loop_block_query_vars/
+ *
+ */
+add_filter('query_loop_block_query_vars', function( $query, $block ){
+
+	$query_block_attributes = $block->context['query'];
+
+	if ( ! isset ( $query_block_attributes['selectedPosts']) || count( $query_block_attributes['selectedPosts'] ) === 0 ) {
+		return $query;
+	}
+
+	$query['post__in'] = $query_block_attributes['selectedPosts'];
+	$query['orderby'] = 'post__in';
+
+	return $query;
+}, 10, 2);
+
+/**
+ *
+ * Modify the REST API query for all post types to use the selected posts from the Query Carousel block.
+ * This allows the Query block to use the selected posts when querying for posts in the editor.
+ *
+ */
+add_action( 'init', function() {
+	foreach( get_post_types() as $post_type ) {
+		add_filter( "rest_{$post_type}_query", function( $args, $request ) {
+			if ( ! $request->has_param('selectedPosts') || count( $request->get_param('selectedPosts') ) === 0 ) {
+				return $args;
+			}
+			$args['orderby'] = 'post__in';
+			$args['post__in'] = array_map('intval', (array) $request->get_param('selectedPosts'));
+			return $args;
+		}, 10, 2 );
+	}
+});

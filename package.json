@@ -18,7 +18,7 @@
 		"lint:js": "wp-scripts lint-js",
 		"packages-update": "wp-scripts packages-update",
 		"plugin-zip": "wp-scripts plugin-zip",
-		"start": "wp-env start",
+		"start": "wp-env start --xdebug",
 		"stop": "wp-env stop"
 	},
 	"devDependencies": {
