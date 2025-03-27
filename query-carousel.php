@@ -73,9 +73,9 @@ add_filter('render_block', function ($block_content, $block) {
 	}
 
 	$classes = array_filter([
-		$block['attrs']['query']['isAutoPlay'] ?? false ? 'carousel-auto' : null,
-		$block['attrs']['query']['isTwoUp'] ?? false ? 'carousel-two-up' : null,
-		$block['attrs']['query']['isPeek'] ?? false ? 'carousel-peek' : null,
+		$block['attrs']['isAutoPlay'] ?? false ? 'carousel-auto' : null,
+		$block['attrs']['isTwoUp'] ?? false ? 'carousel-two-up' : null,
+		$block['attrs']['isPeek'] ?? false ? 'carousel-peek' : null,
 	]);
 
 	if ( ! empty($classes) ) {
